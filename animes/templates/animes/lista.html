@@ -1,0 +1,81 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block style %}<style>
+    ul {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    ul::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+        background-color:#00A3FF ;
+        border-radius: 50px;
+
+    }
+
+    ul::-webkit-scrollbar-track {
+        background-color: #151B26;
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="flex flex-col justify-center gap-6">
+    <div>
+         <ul class="relative flex pb-5 mb-6 pt-2 gap-2 overflow-x-auto max-w-full">
+              <li>
+                    <a href="?letra=#" class="font-normal text-base px-4 py-2 border rounded-3xl hover:border-slate-950 hover:bg-gray-700 hover:text-white dark:border-gray-700 dark:bg-slate-950 dark:text-white">Todos</a>
+                </li>
+            {% for letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                <li>
+                    <a href="?letra={{ letra }}{{ page_param }}" class="font-normal text-base px-4 py-2 border rounded-3xl hover:border-slate-950 hover:bg-gray-700 hover:text-white dark:border-gray-700 dark:bg-slate-950 dark:text-white">{{ letra }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <ul class="relative flex gap-3 justify-center flex-wrap">
+            {% for anime in animes %}
+                <li>
+                    <a href="#" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+                        {% if anime.imagem_capa %}
+                            <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-full h-64 object-cover">
+
+                        {% else %}
+                            <div class="w-full h-64 bg-red-500 rounded"></div>
+                        {% endif %}
+                        <span class="font-normal text-center text-lg text-white break-words">{{ anime.nome }}</span>
+                    </a>
+                </li>
+            {%empty%}
+            <p>Sem animes</p>
+            {% endfor %}
+        </ul>
+        <nav aria-label="Page navigation example " class="flex pt-2 justify-center">
+    <ul class="inline-flex -space-x-px text-sm">
+        {% if animes.has_previous %}
+            <li>
+                <a href="?page={{ animes.previous_page_number }}{{ letra_param }}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+            </li>
+        {% endif %}
+
+        {% for num in animes.paginator.page_range %}
+            <li>
+                <a href="?page={{ num }}{{ letra_param }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 {% if num == animes.number %}text-blue-600 bg-blue-50{% else %}hover:bg-gray-100 hover:text-gray-700{% endif %} dark:border-gray-700 dark:bg-gray-700 dark:text-white">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if animes.has_next %}
+            <li>
+                <a href="?page={{ animes.next_page_number }}{{ letra_param }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+    </div>
+</section>
+{% endblock %}
+ck %}
