@@ -38,7 +38,7 @@
         <ul class="relative flex gap-3 justify-center flex-wrap">
             {% for anime in animes %}
                 <li>
-                    <a href="#" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+                    <a href="{% url 'anime' anime_slug=anime.slug %}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
                         {% if anime.imagem_capa %}
                             <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-full h-64 object-cover">
 

@@ -1,0 +1,70 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block style %}<style>
+    ul {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    ul::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+        background-color:#00A3FF ;
+        border-radius: 50px;
+
+    }
+
+    ul::-webkit-scrollbar-track {
+        background-color: #151B26;
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="flex flex-col justify-center gap-6">
+        <ul class="relative flex gap-3 justify-center flex-wrap">
+            {% for ep in atualizacao %}
+                <li>
+                     <a href="#" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+            {% if ep.anime.imagem_capa %}
+            <img src="{{ ep.anime.imagem_capa }}" alt="{{ ep.anime.nome }}" class="rounded w-full h-64 object-cover">
+            {% else %}
+            <div class="w-full h-64 bg-red-500 rounded"></div>
+            {% endif %}
+            <span class="text-sm font-medium text-slate-400">{{ ep.titulo }}</span>
+            <span class="font-normal text-lg text-center text-white break-words">{{ ep.anime }}</span>
+                    </a>
+                </li>
+            {%empty%}
+            <p>Sem animes</p>
+            {% endfor %}
+        </ul>
+        <nav aria-label="Page navigation example " class="flex pt-2 justify-center">
+    <ul class="inline-flex -space-x-px text-sm">
+        {% if atualizacao.has_previous %}
+            <li>
+                <a href="?page={{ atualizacao.previous_page_number }}" class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+            </li>
+        {% endif %}
+
+        {% for num in atualizacao.paginator.page_range %}
+            <li>
+                <a href="?page={{ num }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 {% if num == animes.number %}text-blue-600 bg-blue-50{% else %}hover:bg-gray-100 hover:text-gray-700{% endif %} dark:border-gray-700 dark:bg-gray-700 dark:text-white">{{ num }}</a>
+            </li>
+        {% endfor %}
+
+        {% if atualizacao.has_next %}
+            <li>
+                <a href="?page={{ atualizacao.next_page_number }}" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+    </div>
+</section>
+{% endblock %}
+ck %}
