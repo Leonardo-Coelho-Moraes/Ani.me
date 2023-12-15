@@ -1,0 +1,66 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block style %}<style>
+    ul {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    ul::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+        background-color:#00A3FF ;
+        border-radius: 50px;
+
+    }
+
+    ul::-webkit-scrollbar-track {
+        background-color: #151B26;
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<section class="flex flex-col justify-center pb-6 gap-12 h-2/6 w-3/4">
+    <div class="flex flex-col gap-8 ">
+      {% if cap %}
+    <h1 class="text-white font-base text-2xl"><b>{{ cap.anime }} - {{ cap.titulo }}</b></h1>
+{% else %}
+    <p class="text-white">Episódio não encontrado.</p>
+{% endif %}
+
+{% if cap.url_thumb %}
+    <img src="{{ cap.url_thumb }}" alt="{{ anime.nome }}" class="w-full h-full object-cover">
+    {% else %}
+
+<img class="h-2/6 w-3/4" src="https://flowbite.com/docs/images/examples/image-1@2x.jpg" alt="image description">
+
+    {% endif %}
+    </div>
+    <div class="flex gap-4 h-12 items-center justify-around">
+{% if cap_posterior %}
+<a href="{% if cap_anterior and cap.slug != 'episodio-1' %}{% url 'episodio' anime_slug=anime.slug episodio_slug=cap_anterior.slug %}{% else %}{% url 'episodio' anime_slug=anime.slug episodio_slug='episodio-1' %}{% endif %}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Cap. Anterior</a>
+{% else %}
+        <p class="text-white">Não há episódio anterior disponível.</p>
+    {% endif %}
+       <select id="countries" class="w-max h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        {% for i in all_caps %}
+            <option {% if cap and i.titulo == cap.titulo %}selected{% endif %}>{{ i.titulo }}</option>
+            {%empty%}
+            <p>Sem Capitulos</p>
+        {% endfor %}
+    </select>
+
+    {% if cap_posterior %}
+        <a href="{% url 'episodio' anime_slug=anime.slug episodio_slug=cap_posterior.slug %}" class="w-max text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Cap. Posterior</a>
+    {% else %}
+        <p class="text-white">Não há episódio posterior disponível.</p>
+    {% endif %}
+
+</section>
+<section class="flex flex-col justify-center pb-6 gap-12 h-2/6 w-max">
+    <h1 class="text-white font-base text-2xl">Mais assistidos</h1>
+</section>
+{% endblock %}

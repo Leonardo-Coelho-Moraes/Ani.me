@@ -1,5 +1,5 @@
 from django.contrib import admin
-from animes.models import Anime, Episodio
+from animes.models import Anime, Episodio, Topic
 
 class EpisodioAdmin(admin.ModelAdmin):
     list_display = ['anime', 'titulo', 'postado_em']
@@ -15,4 +15,5 @@ class AnimeAdmin(admin.ModelAdmin):
     readonly_fields = ['criado_em']
     ordering = ['criado_em']
 admin.site.register(Anime, AnimeAdmin)
+admin.site.register(Topic)
 admin.site.register(Episodio, EpisodioAdmin)

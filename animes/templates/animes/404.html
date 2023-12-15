@@ -1,0 +1,32 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Erro{% endblock %}
+
+{% block content %}
+
+<div class="flex items-center justify-center min-h-screen bg-white py-48">
+    <div class="flex flex-col">
+
+
+        <!-- Error Container -->
+        <div class="flex flex-col items-center">
+            <div class="text-indigo-500 font-bold text-7xl">
+                404
+            </div>
+
+            <div class="font-bold text-3xl xl:text-7xl lg:text-6xl md:text-5xl mt-10">
+                Essa página não existe
+            </div>
+
+            <div class="text-gray-400 font-medium text-sm md:text-xl lg:text-2xl mt-8">
+                 {{mensagem}}
+                {% if animes%}
+                {{animes.nome}}
+                {% endif%}
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}

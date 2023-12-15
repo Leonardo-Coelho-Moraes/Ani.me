@@ -35,6 +35,7 @@
                 </li>
             {% endfor %}
         </ul>
+
         <ul class="relative flex gap-3 justify-center flex-wrap">
             {% for anime in animes %}
                 <li>
@@ -52,6 +53,7 @@
             <p>Sem animes</p>
             {% endfor %}
         </ul>
+          {% if cap %}
         <nav aria-label="Page navigation example " class="flex pt-2 justify-center">
     <ul class="inline-flex -space-x-px text-sm">
         {% if animes.has_previous %}
