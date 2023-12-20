@@ -10,3 +10,6 @@ class CriarAnime(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['nome'].widget.attrs.update({'class': campo_texto_class()})
+
+
+

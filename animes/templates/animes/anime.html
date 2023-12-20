@@ -44,7 +44,8 @@
                 <b class="text-lg font-medium text-white">Descrição: </b> <span class="font-normal text-base text-slate-400 ">{{anime.descricao}}</span>
             </li>
             <li >
-                <a href="#" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Ver o 1ª capitulo</a>
+
+                <a href="{% if cap1 %}{% url 'episodio' anime_slug=anime.slug episodio_slug=cap1.slug %}{% else %}#{% endif %}" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Ver o 1ª capitulo</a>
             </li>
 
         </ul>
@@ -96,4 +97,6 @@
     </ul>
 </nav>
 </section>
+{% include 'animes/animesRecentes.html' %}
+
 {% endblock %}

@@ -27,7 +27,7 @@
         <ul class="relative flex gap-3 justify-center flex-wrap">
             {% for ep in atualizacao %}
                 <li>
-                     <a href="#" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+                     <a href="{% url 'episodio' anime_slug=ep.anime.slug episodio_slug=ep.slug%}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
             {% if ep.anime.imagem_capa %}
             <img src="{{ ep.anime.imagem_capa }}" alt="{{ ep.anime.nome }}" class="rounded w-full h-64 object-cover">
             {% else %}

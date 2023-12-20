@@ -1,0 +1,31 @@
+{% extends 'animes/_base.html' %}
+{% block title %}BUsca{% endblock %}
+
+
+{% block content %}
+<section class="flex flex-col justify-center gap-6">
+    {% if resultados %}
+<h1 class="text-2xl font-normal text-white">Animes Encontrados {{termo_busca}}</h1>
+        <ul class="relative flex gap-3 justify-center flex-wrap">
+            {% for anime in resultados %}
+              <li>
+            <a href="{% url 'anime' anime_slug=anime.slug %}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+                {% if anime.imagem_capa %}
+                <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-full h-64 object-cover">
+
+                {% else %}
+                <div class="w-full h-64 bg-red-500 rounded"></div>
+                {% endif %}
+                <span class="font-normal text-lg text-center text-white break-words">{{ anime.nome }}</span>
+            </a>
+        </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <span class="font-normal text-lg text-center text-white break-words">Nenhum Anime Encontrado {{termo_busca}}</span>
+    {% endif %}
+</section>
+{% include 'animes/animesRecentes.html' %}
+
+{% endblock %}
+

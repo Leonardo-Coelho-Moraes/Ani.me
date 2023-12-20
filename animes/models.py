@@ -39,6 +39,7 @@ class Anime(models.Model):
     nome = models.CharField(max_length=150)
     descricao = models.CharField(max_length=1000)
     duracao = models.PositiveIntegerField(default=0)
+    vizualizacoes = models.PositiveIntegerField(default=0)
     episodios = models.PositiveIntegerField(default=0)
     criado_em = models.DateTimeField(auto_now_add=True)
     lancamento = models.DateField()
@@ -69,6 +70,7 @@ def criar_slug(sender, instance, **kwargs):
 class Episodio(models.Model):
     titulo = models.CharField(max_length=150)
     descricao = models.CharField(max_length=350)
+    vizualizacoes = models.PositiveIntegerField(default=0)
     url_thumb = models.URLField(blank=True, null=True)
     url_episodio = models.URLField(blank=True, null=True)
     incorporar_player = models.TextField(blank=True, null=True)
@@ -95,3 +97,10 @@ class Episodio(models.Model):
 def criar_slug_episodio(sender, instance, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.titulo)
+
+class Usuario(models.Model):
+    nome = models.CharField(max_length=150)
+    senha = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome

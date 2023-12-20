@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Anime, Episodio
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Anime, Episodio, Usuario
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponseRedirect
-
 from .forms import CriarAnime
+from django.views import View
+from .templates.utilidades import validacaoPesquisa
 from django.urls import reverse
 import Levenshtein
 
@@ -65,15 +66,21 @@ def anime(request, anime_slug):
     :param anime_slug: a slug do anime
     :return: requisição
     """
+    animes = Anime.objects.order_by('-criado_em')[:6]
+
     try:
         anime = get_object_or_404(Anime, slug=anime_slug)
+        anime.vizualizacoes += 1
+        anime.save()
     except Http404:
         # Buscar todos os animes com slugs semelhantes
         mensagem = f'{anime_slug} não leva a nenhum anime.'
         contexto = {'mensagem': mensagem}
         return render(request, 'animes/404.html', contexto)
     atualizacao = anime.episodios_anime.order_by('-postado_em')
-    cap1 = anime.episodios_anime.order_by('postado_em')
+    cap1 = anime.episodios_anime.order_by('postado_em').first()
+
+
 
 
     paginator = Paginator(atualizacao, 30)
@@ -89,7 +96,7 @@ def anime(request, anime_slug):
         # Se a página estiver fora do intervalo, exibe a última página
         animes_paginados = paginator.page(paginator.num_pages)
 
-    contexto = {'anime': anime, 'atualizacao': animes_paginados, 'cap1': cap1}
+    contexto = {'anime': anime, 'atualizacao': animes_paginados, 'cap1': cap1, 'animes': animes}
 
     return render(request, 'animes/anime.html', contexto)
 
@@ -101,8 +108,11 @@ def episodio(request, anime_slug, episodio_slug):
     :return: requisição
     """
     try:
+        mais = Anime.objects.order_by('vizualizacoes')[0:3]
         anime = get_object_or_404(Anime, slug=anime_slug)
         cap = get_object_or_404(Episodio, slug=episodio_slug, anime=anime)
+        cap.vizualizacoes += 1
+        cap.save()
     except Http404:
         if 'anime' not in locals():
             mensagem = f'{anime_slug} não leva a nenhum anime'
@@ -113,7 +123,7 @@ def episodio(request, anime_slug, episodio_slug):
     all_caps = anime.episodios_anime.order_by('postado_em').values('titulo', 'slug')
     cap_anterior = Episodio.objects.filter(postado_em__lt=cap.postado_em).order_by('-postado_em').first()
     cap_posterior = Episodio.objects.filter(postado_em__gt=cap.postado_em).order_by('postado_em').first()
-    contexto = {'anime': anime, 'all_caps': all_caps, 'cap': cap, 'cap_anterior': cap_anterior, 'cap_posterior': cap_posterior}
+    contexto = {'mais': mais, 'anime': anime, 'all_caps': all_caps, 'cap': cap, 'cap_anterior': cap_anterior, 'cap_posterior': cap_posterior}
 
     return render(request, 'animes/episodio.html', contexto)
 def animeCriar(request):
@@ -127,4 +137,51 @@ def animeCriar(request):
     context = {'form': form}
     return render(request, 'animes/form.html', context)
 
+def buscarAnime(request):
+    animes = Anime.objects.order_by('-criado_em')[:6]
+    resultados = []
+    termo_busca = request.GET.get('busca')
+    try:
+        if validacaoPesquisa(termo_busca):
+            resultados = Anime.objects.filter(nome__icontains=termo_busca)
+        else:
+            return redirect('index')
+    except Anime.DoesNotExist:
+        # Lidar com a exceção se não houver resultados
+        resultados = []
+
+    context = {'resultados': resultados, 'termo_busca': termo_busca, 'animes': animes}
+    return render(request, 'animes/busca.html', context)
+
+"""class Administracao(acesso=False):
+    def __int__(self):
+        pass
+    def ola(self, request):
+        pass
+        
+def login(request):
+    nome = request.GET('nome')
+    senha = request.GET('senha')
+    usuario = Usuario.objects.filter(nome__icontains=nome, senha__icontains=senha)
+    if usuario:
+        acesso(True)
+
+    else:
+        acesso(False)
+
+
+        redirect('index')"""
+
+
+def login(self, request):
+    nome = request.POST.get('nome')
+    senha = request.POST.get('senha')
+    usuario = Usuario.objects.filter(nome__exact=nome, senha__exact=senha)
+
+    if usuario.exists():
+
+        return redirect('index')
+    else:
+
+        return render(request, 'animes/login.html', {'erro': 'Credenciais inválidas'})
 

@@ -1,0 +1,23 @@
+<section class="flex flex-col justify-center  h-2/6 w-1/4 gap-8 hidden lg:flex">
+    <h1 class="text-2xl font-base text-slate-400">Mais Assistidos</h1>
+    <ul class=" flex flex-col gap-3 justify-left w-full">
+        {% for anime in mais %}
+        <li class="w-full relative" >
+            <a href="{% url 'anime' anime_slug=anime.slug %}" class="rounded pr-10 relative flex h-28 w-full gap-3 items-center justify-items-center bg-gray-800">
+                {% if anime.imagem_capa %}
+                <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-24 h-28 object-cover">
+
+                {% else %}
+                <div class="w-24 h-28 bg-red-500 rounded"></div>
+                {% endif %}
+                <div class="flex flex-col">
+                <span class="font-normal text-base w-5/6 pb-1 text-white break-words break-normal">{{ anime.nome }}</span>
+                     <span class="font-normal text-base w-5/6 text-slate-400">{{ anime.lancamento|date:"Y"|slice:"-4:" }}</span>
+                </div>
+            </a>
+        </li>
+        {%empty%}
+        <p>Sem animes</p>
+        {% endfor %}
+    </ul>
+</section>

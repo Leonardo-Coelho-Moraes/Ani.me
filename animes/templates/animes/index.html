@@ -1,4 +1,5 @@
 {% extends 'animes/_base.html' %}
+
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
@@ -72,7 +73,7 @@
     <h1 class="text-2xl font-normal text-white">Últimas atualizações</h1>
     <div class="relative flex gap-3 justify-center flex-wrap">
         {% for ep in atualizacao %}
-        <a href="#" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+         <a href="{% url 'episodio' anime_slug=ep.anime.slug episodio_slug=ep.slug%}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
             {% if ep.anime.imagem_capa %}
             <img src="{{ ep.anime.imagem_capa }}" alt="{{ ep.anime.nome }}" class="rounded w-full h-64 object-cover">
             {% else %}
@@ -89,24 +90,7 @@
        class="text-white w-fit self-center bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Ver
         mais</a>
 </section>
-<section class="flex flex-col justify-center gap-6">
-    <h1 class="text-2xl font-normal text-white">Animes recentes</h1>
-    <ul class="relative flex gap-3 justify-center flex-wrap">
-        {% for anime in animes %}
-        <li>
-            <a href="{% url 'anime' anime_slug=anime.slug %}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
-                {% if anime.imagem_capa %}
-                <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-full h-64 object-cover">
 
-                {% else %}
-                <div class="w-full h-64 bg-red-500 rounded"></div>
-                {% endif %}
-                <span class="font-normal text-lg text-center text-white break-words">{{ anime.nome }}</span>
-            </a>
-        </li>
-        {%empty%}
-        <p>Sem animes</p>
-        {% endfor %}
-    </ul>
-</section>
+{% include 'animes/animesRecentes.html' %}
+
 {% endblock %}
