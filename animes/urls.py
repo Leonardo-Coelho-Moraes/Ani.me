@@ -9,5 +9,4 @@ urlpatterns = [
     path('anime/', views.buscarAnime, name='busca'),
     path('animes/<slug:anime_slug>/<slug:episodio_slug>/', views.episodio, name='episodio'),
     path('novos_episodios/', views.novos_eps, name='novos_episodios'),
-    path('login/', views.login, name='login'),
 ]

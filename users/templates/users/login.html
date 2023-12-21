@@ -1,0 +1,46 @@
+{% extends 'animes/_base.html' %}
+{% block content%}
+<section >
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <a href="#" class=" text-blue-500 flex items-center mb-6 text-2xl font-semibold ">
+        Ani.me
+      </a>
+      {%if erro%}
+      <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
+  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span class="sr-only">Info</span>
+  <div>
+    <span class="font-medium">Alerta de Erro!</span> Seu Usuário ou Senha Estão incorretos
+  </div>
+</div>
+      {%endif%}
+      <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+              <h1 class=" text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                  Faça seu login
+              </h1>
+              <form class="space-y-4 md:space-y-6" action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                  <div>
+                      <label for="{{ form.login.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Login</label>
+                      {{ form.login }}
+                     </div>
+                    <div>
+                      <label for="{{ form.senha.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
+                    {{ form.senha }}
+                    </div>
+
+
+
+                  <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Entrar</button>
+                  <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                      Você não tem conta ainda? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Criar Login</a>
+                  </p>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>
+{% endblock%}

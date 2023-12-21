@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Anime, Episodio, Usuario
+from .models import Anime, Episodio
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponseRedirect
 from .forms import CriarAnime
-from django.views import View
 from .templates.utilidades import validacaoPesquisa
 from django.urls import reverse
-import Levenshtein
+
+
 
 # Create your views here.
 def index(request):
@@ -153,27 +153,9 @@ def buscarAnime(request):
     context = {'resultados': resultados, 'termo_busca': termo_busca, 'animes': animes}
     return render(request, 'animes/busca.html', context)
 
-"""class Administracao(acesso=False):
-    def __int__(self):
-        pass
-    def ola(self, request):
-        pass
-        
-def login(request):
-    nome = request.GET('nome')
-    senha = request.GET('senha')
-    usuario = Usuario.objects.filter(nome__icontains=nome, senha__icontains=senha)
-    if usuario:
-        acesso(True)
-
-    else:
-        acesso(False)
 
 
-        redirect('index')"""
-
-
-def login(self, request):
+"""def login(self, request):
     nome = request.POST.get('nome')
     senha = request.POST.get('senha')
     usuario = Usuario.objects.filter(nome__exact=nome, senha__exact=senha)
@@ -185,3 +167,4 @@ def login(self, request):
 
         return render(request, 'animes/login.html', {'erro': 'Credenciais inválidas'})
 
+"""

@@ -98,9 +98,3 @@ def criar_slug_episodio(sender, instance, **kwargs):
     if not instance.slug:
         instance.slug = slugify(instance.titulo)
 
-class Usuario(models.Model):
-    nome = models.CharField(max_length=150)
-    senha = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nome

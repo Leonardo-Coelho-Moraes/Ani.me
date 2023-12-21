@@ -1,6 +1,5 @@
 from django.contrib import admin
-from animes.models import Anime, Episodio, Topic, Usuario
-
+from animes.models import Anime, Episodio, Topic
 class EpisodioAdmin(admin.ModelAdmin):
     list_display = ['anime', 'titulo', 'vizualizacoes', 'postado_em']
     date_hierarchy = 'postado_em'
@@ -16,11 +15,8 @@ class AnimeAdmin(admin.ModelAdmin):
     ordering = ['criado_em']
 
 
-class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ['nome', 'senha']
-
 
 admin.site.register(Anime, AnimeAdmin)
 admin.site.register(Topic)
-admin.site.register(Usuario, UsuarioAdmin)
+
 admin.site.register(Episodio, EpisodioAdmin)
