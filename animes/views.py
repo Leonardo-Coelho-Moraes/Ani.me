@@ -17,6 +17,8 @@ def index(request):
     """
     atualizacao = Episodio.objects.order_by('-postado_em')[:12]
     animes = Anime.objects.order_by('-criado_em')[:6]
+
+
     contexto = {'animes': animes, 'atualizacao': atualizacao}
 
     return render(request, 'animes/index.html', contexto)

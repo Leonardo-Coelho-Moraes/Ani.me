@@ -31,13 +31,7 @@
     {% endif %}
           {% if anime %}
         <ul class="flex flex-col w-full h-full gap-4">
-            {% if user.is_authenticated %}
-    {% if user.groups.filter(name='anime').exists %}
-        <div>
-            Conteúdo específico para usuários do grupo 'SeuGrupo'
-        </div>
-    {% endif %}
-            {% endif %}
+
 
             <li>
                 <b class="text-lg font-medium text-white">Duração: </b> <span class="font-normal text-base text-slate-400 ">{{anime.duracao}}Min.</span>
