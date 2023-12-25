@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from .forms import LoginForm
+
 from django.contrib.auth import authenticate, logout
-from django.contrib.auth import login as authLogin
 from django.contrib.auth.forms import UserCreationForm
+
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as authLogin
+
 
 def login(request):
     erro = False
@@ -22,6 +26,7 @@ def login(request):
     context = {'form': form, 'erro': erro}
     return render(request, 'users/login.html', context)
 
+
 def logout_view(request):
     logout(request)
     return redirect('index')
@@ -35,13 +40,9 @@ def register_view(request):
 
         if form.is_valid():
             new_user = form.save()
-
-            authenticated_user = authenticate(username=new_user.username, password=request.POST['password1'])
-            login(request, authenticated_user)
             return redirect('index')
     context = {'form': form}
     return render(request, 'users/register.html', context)
-
 
 
 
