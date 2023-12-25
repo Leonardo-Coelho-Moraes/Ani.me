@@ -17,6 +17,19 @@ class Topic(models.Model):
         devolve uma representalçao em sting do modelo
         """
         return self.text
+class Genero(models.Model):
+    """
+    Um assunto sobre o qual o user tá aprendendo
+    """
+    name = models.CharField(max_length=200)
+    name_apresentacao = models.CharField(max_length=200)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """
+        devolve uma representalçao em sting do modelo
+        """
+        return self.name_apresentacao
 
 class Entry(models.Model):
     """
@@ -43,7 +56,7 @@ class Anime(models.Model):
     episodios = models.PositiveIntegerField(default=0)
     criado_em = models.DateTimeField(auto_now_add=True)
     lancamento = models.DateField()
-    genero = models.CharField(max_length=100)
+    genero = models.ManyToManyField(Genero)
     estudio = models.CharField(max_length=100)
     diretor = models.CharField(max_length=100)
     pontuacao = models.FloatField()

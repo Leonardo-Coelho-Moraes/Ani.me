@@ -1,0 +1,41 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block style %}
+<style>
+    ul {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    ul::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+        background-color:#00A3FF ;
+        border-radius: 50px;
+
+    }
+
+    ul::-webkit-scrollbar-track {
+        background-color: #151B26;
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <section class="flex flex-col justify-center gap-6">
+
+         <ul class="relative flex pb-5 mb-6 pt-2 gap-2 flex-col overflow-x-auto max-w-full">
+             {%for gen in generos%}
+              <li>
+                    <a href="{%url 'genero' genero=gen.name%}" class="font-normal hover:text-blue-500 text-base  dark:text-white">{{gen.name_apresentacao}}</a>
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+
+</section>
+{% endblock %}

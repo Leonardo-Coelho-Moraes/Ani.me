@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Anime, Episodio
+from .models import Anime, Episodio, Genero
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, HttpResponseRedirect
 from .forms import CriarAnime
@@ -43,6 +43,51 @@ def lista(request):
     contexto = {'animes': animes_paginados}
     return render(request, 'animes/lista.html', contexto)
 
+def generos(request):
+    """
+    generos
+    :param request: a requsição
+    :return: requisição
+    """
+    generos = Genero.objects.order_by('name')
+    contexto = {'generos': generos}
+    return render(request, 'animes/generos.html', contexto)
+
+
+def genero(request, genero):
+    """
+    Exibe animes de um determinado gênero, filtrados por uma letra inicial e paginados.
+
+    :param request: A requisição HTTP.
+    :param slug: O slug do gênero.
+    :return: Resposta renderizada.
+    """
+
+    # Obtém a letra inicial do filtro, se fornecida
+    letra_filtro = request.GET.get('letra', '')
+
+    # Filtra os animes pelo gênero e letra inicial, ordenados por nome
+    animes = Anime.objects.filter(genero__name__icontains=genero, nome__istartswith=letra_filtro).order_by('nome')
+    # Configuração da paginação
+    paginator = Paginator(animes, 30)
+    page = request.GET.get('page', 1)
+
+    try:
+        # Tenta converter o número da página para inteiro
+        page = int(page)
+        animes_paginados = paginator.page(page)
+    except (ValueError, PageNotAnInteger):
+        # Se o número da página não for um número inteiro válido, exibe a primeira página
+        animes_paginados = paginator.page(1)
+    except EmptyPage:
+        # Se a página estiver fora do intervalo, exibe a última página
+        animes_paginados = paginator.page(paginator.num_pages)
+
+    # Contexto a ser passado para a template
+    contexto = {'animes': animes_paginados}
+
+    # Renderiza a template 'animes/genero.html' com o contexto
+    return render(request, 'animes/genero.html', contexto)
 def novos_eps(request):
     atualizacao = Episodio.objects.order_by('-postado_em')
     animes = Anime.objects.order_by('-criado_em')
@@ -74,17 +119,16 @@ def anime(request, anime_slug):
         anime = get_object_or_404(Anime, slug=anime_slug)
         anime.vizualizacoes += 1
         anime.save()
+
+
+
     except Http404:
         # Buscar todos os animes com slugs semelhantes
         mensagem = f'{anime_slug} não leva a nenhum anime.'
-        contexto = {'mensagem': mensagem}
+        contexto = {'mensagem': mensagem }
         return render(request, 'animes/404.html', contexto)
     atualizacao = anime.episodios_anime.order_by('-postado_em')
     cap1 = anime.episodios_anime.order_by('postado_em').first()
-
-
-
-
     paginator = Paginator(atualizacao, 30)
     page = request.GET.get('page', 1)
 

@@ -1,0 +1,87 @@
+{% extends 'animes/_base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block style %}
+<style>
+    ul {
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    ul::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+        background-color:#00A3FF ;
+        border-radius: 50px;
+
+    }
+
+    ul::-webkit-scrollbar-track {
+        background-color: #151B26;
+        border-radius: 50px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <section class="flex flex-col justify-center gap-6">
+    <div>
+        <ul class="relative flex pb-5 mb-6 pt-2 gap-2 overflow-x-auto max-w-full">
+    <li>
+        <a href="?letra={{ page_param }}" class="font-normal text-base px-4 py-2 border rounded-3xl hover:border-slate-950 hover:bg-gray-700 hover:text-white dark:border-gray-700 dark:bg-slate-950 dark:text-white">Todos</a>
+    </li>
+    {% for letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+        <li>
+            <a href="?letra={{ letra }}{{ page_param }}" class="font-normal text-base px-4 py-2 border rounded-3xl hover:border-slate-950 hover:bg-gray-700 hover:text-white dark:border-gray-700 dark:bg-slate-950 dark:text-white">{{ letra }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+        <ul class="relative flex gap-3 justify-center flex-wrap">
+    {% for anime in animes %}
+        <li class="anime-item {{ anime.slug }}">
+            <a href="{% url 'anime' anime_slug=anime.slug %}" class="relative flex flex-col w-48 gap-1 items-center justify-items-center flex-wrap">
+                {% if anime.imagem_capa %}
+                    <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded w-full h-64 object-cover">
+                {% else %}
+                    <div class="w-full h-64 bg-red-500 rounded"></div>
+                {% endif %}
+                <span class="font-normal text-center text-lg text-white break-words">{{ anime.nome }}</span>
+            </a>
+        </li>
+    {%empty%}
+        <p class="no-animes">Sem animes</p>
+    {% endfor %}
+</ul>
+
+         {% if cap %}
+    <nav aria-label="Page navigation example" class="flex pt-2 justify-center">
+        <ul class="inline-flex -space-x-px text-sm">
+            {% if animes.has_previous %}
+                <li>
+                    <a href="?page={{ animes.previous_page_number }}{{ letra_param }}" class="page-link">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in animes.paginator.page_range %}
+                {% ifchanged %}
+                    <li>
+                {% endifchanged %}
+                        <a href="?page={{ num }}{{ letra_param }}" class="page-link {% if num == animes.number %}current-page{% else %}hover:bg-gray-100 hover:text-gray-700{% endif %}">{{ num }}</a>
+                {% ifchanged %}
+                    </li>
+                {% endifchanged %}
+            {% endfor %}
+
+            {% if animes.has_next %}
+                <li>
+                    <a href="?page={{ animes.next_page_number }}{{ letra_param }}" class="page-link">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+
+    </div>
+</section>
+{% endblock %}

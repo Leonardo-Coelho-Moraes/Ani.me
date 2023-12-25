@@ -40,7 +40,12 @@
                  <b class="text-lg font-medium text-white">Estúdio: </b> <span class="font-normal text-base text-slate-400 ">{{anime.estudio}}</span>
             </li>
             <li>
-                <b class="text-lg font-medium text-white">Genêro: </b> <span class="font-normal text-base text-slate-400 ">{{anime.genero}}</span>
+                <b class="text-lg font-medium text-white">Genêro: </b>
+                {%if anime.genero%}
+                {% for genero in anime.genero.all %}
+                <a href="{%url 'genero' genero=genero.name%}" class="font-normal text-base text-slate-400 hover:text-blue-500 ">{{genero.name_apresentacao}};  </a>
+                {%endfor%}
+                {%endif%}
             </li>
             <li class="mt-5 mb-3">
                 <b class="text-lg font-medium text-white">Descrição: </b> <span class="font-normal text-base text-slate-400 ">{{anime.descricao}}</span>
@@ -55,7 +60,7 @@
 
 </section>
 <section>
-    <h1 class="text-white font-base text-2xl">Comentários</h1>
+    <h1 class="text-white font-base text-2xl mb-2">Episódios</h1>
 
     <ul class="flex gap-3">
 
