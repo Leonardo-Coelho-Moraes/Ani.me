@@ -1,24 +1,15 @@
 {% extends 'animes/_base.html' %}
-
+{% load widget_tweaks %}
+{%block title%}Registro de Usuário{%endblock%}
 {% block content%}
-<section >
-  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+<section class="flex items-start justify-center w-full">
+  <div class="flex flex-col items-center justify-start px-6 py-8 w-1/2 mx-auto md:h-screen lg:py-0">
       <a href="#" class=" text-blue-500 flex items-center mb-6 text-2xl font-semibold ">
         Ani.me
       </a>
-      {%if erro%}
-      <div class="flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800" role="alert">
-  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-  </svg>
-  <span class="sr-only">Info</span>
-  <div>
-    <span class="font-medium">Alerta de Erro!</span> Dados Incorretos
-  </div>
-</div>
-      {%endif%}
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+
               <h1 class=" text-center text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   Registrar
               </h1>
@@ -26,7 +17,25 @@
                     {% csrf_token %}
                      <!-- Campo username -->
 
-        {{ form.as_p }}
+
+    <div class="mb-4">
+        <label for="{{ form.username.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome de usuário</label>
+        {% render_field form.username|add_class:'mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %}
+        </div>
+
+    <div class="mb-4">
+        <label for="{{ form.password1.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Senha</label>
+
+         {% render_field form.password1|add_class:'mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %}
+
+    </div>
+
+    <div class="mb-4">
+        <label for="{{ form.password2.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmação de Senha</label>
+         {% render_field form.password2|add_class:'mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500' %}
+
+    </div>
+
 
                   <input type="hidden" name="next"  value="{%url 'index'%}">
 
@@ -39,5 +48,30 @@
           </div>
       </div>
   </div>
-</section>
+    <div class="flex flex-col gap-1 w-1/2">
+       {% include 'animes/alerts.html' %}
+         <div class="flex p-4 mb-4 h-full max-h-fit text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+  <svg class="flex-shrink-0 inline w-4 h-4 me-3 mt-[2px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+  </svg>
+  <span class="sr-only">Informações</span>
+  <div>
+    <span class="font-medium">Sobre o formulário</span>
+      <ul class="mt-1.5 list-disc list-inside">
+        <li>USUÁRIO: </li>
+        <li>Obrigatório, 150 caracteres ou menos.</li>
+          <li>Letras, números e @/./+/-/_ apenas.</li>
+        <li>SENHA:</li>
+         <li>Sua senha não pode ser muito parecida com o resto das suas informações pessoais.</li>
+<li>Sua senha precisa conter pelo menos 8 caracteres.</li>
+<li>Sua senha não pode ser uma senha comumente utilizada.</li>
+<li>Sua senha não pode ser inteiramente numérica.</li>
+          <li>CONFIRMAÇÃO DE SENHA: </li>
+          <li>Informe a mesma senha informada anteriormente, para verificação. </li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+   </section>
 {% endblock%}

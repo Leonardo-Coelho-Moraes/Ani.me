@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Anime, Episodio, Genero
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404, HttpResponseRedirect
-from .forms import CriarAnime
+from django.http import Http404
+from .forms import CriarAnime, TopicForm
 from .templates.utilidades import validacaoPesquisa
-from django.urls import reverse
+from django.contrib import messages
 
 
 
@@ -30,6 +30,7 @@ def lista(request):
     paginator = Paginator(animes, 30)
     page = request.GET.get('page', 1)
 
+
     try:
         page = int(page)
         animes_paginados = paginator.page(page)
@@ -50,6 +51,7 @@ def generos(request):
     :return: requisição
     """
     generos = Genero.objects.order_by('name')
+    Genero.objects.create(name='ola', name_apresentacao='ola')
     contexto = {'generos': generos}
     return render(request, 'animes/generos.html', contexto)
 
@@ -172,6 +174,8 @@ def episodio(request, anime_slug, episodio_slug):
     contexto = {'mais': mais, 'anime': anime, 'all_caps': all_caps, 'cap': cap, 'cap_anterior': cap_anterior, 'cap_posterior': cap_posterior}
 
     return render(request, 'animes/episodio.html', contexto)
+
+
 def animeCriar(request):
     if request.method != 'POST':
         form = CriarAnime()
@@ -179,9 +183,16 @@ def animeCriar(request):
         form = CriarAnime(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('index'))
-    context = {'form': form}
+            messages.success(request, 'Tópico criado com sucesso!')
+            return redirect('anime_criar')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Criar Anime'}
     return render(request, 'animes/form.html', context)
+
 
 def buscarAnime(request):
     animes = Anime.objects.order_by('-criado_em')[:6]
@@ -201,16 +212,23 @@ def buscarAnime(request):
 
 
 
-"""def login(self, request):
-    nome = request.POST.get('nome')
-    senha = request.POST.get('senha')
-    usuario = Usuario.objects.filter(nome__exact=nome, senha__exact=senha)
+def CriarTopic(request):
 
-    if usuario.exists():
+    if request.method == 'POST':
 
-        return redirect('index')
+        form = TopicForm(request.POST)
+        form = TopicForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Tópico criado com sucesso!')
+            return redirect('criar_topic')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
     else:
+        form = TopicForm()
+    context = {'form': form, 'nome': 'Criar Topico'}
 
-        return render(request, 'animes/login.html', {'erro': 'Credenciais inválidas'})
-
-"""
+    return render(request, 'animes/form.html', context)

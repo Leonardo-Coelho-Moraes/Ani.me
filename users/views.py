@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import LoginForm
-
+from django.contrib import messages
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 
@@ -40,7 +40,12 @@ def register_view(request):
 
         if form.is_valid():
             new_user = form.save()
+            messages.success(request, 'Tópico criado com sucesso!')
             return redirect('index')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
     context = {'form': form}
     return render(request, 'users/register.html', context)
 

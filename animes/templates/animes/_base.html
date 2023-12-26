@@ -1,5 +1,5 @@
 <!-- templates/_base.html -->
-
+{%load static%}
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -12,6 +12,7 @@
 
     <title>{% block title %}{% endblock %}</title>
     {% block style %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/estilo.css'%}">
 
      <script src="https://cdn.tailwindcss.com"></script>
      <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
@@ -20,12 +21,10 @@
 </head>
 
 <body class="bg-slate-950">
-     <header class="container mx-auto mt-24 w-11/12">
-          {% block header %}{% endblock %}
-     </header>
+    {% include 'animes/navbar.html' %}
 
     <main class="container mx-auto mt-24 w-11/12">
-{% include 'animes/navbar.html' %}
+
         {% block content %}{% endblock %}
 
 
