@@ -89,7 +89,7 @@ class Episodio(models.Model):
     incorporar_player = models.TextField(blank=True, null=True)
     postado_em = models.DateTimeField(auto_now_add=True)
     anime = models.ForeignKey(Anime, related_name='episodios_anime', on_delete=models.CASCADE)
-    slug = models.SlugField( blank=True)
+    slug = models.SlugField(blank=True)
     def save(self, *args, **kwargs):
         # Atualiza o número de episódios do anime ao qual o episódio está associado
         self.anime.episodios = self.anime.episodios_anime.count() + 1

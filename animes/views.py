@@ -1,14 +1,17 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect,reverse
 from .models import Anime, Episodio, Genero
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
-from .forms import CriarAnime, TopicForm
+from django.http import Http404, HttpResponseForbidden
+from .forms import AnimeForm, GeneroForm, EpisiodioForm
 from .templates.utilidades import validacaoPesquisa
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test, login_required
 
 
 
 # Create your views here.
+def is_staff(user):
+    return user.is_authenticated and user.is_staff
 def index(request):
     """
     pagina pricipal
@@ -17,6 +20,8 @@ def index(request):
     """
     atualizacao = Episodio.objects.order_by('-postado_em')[:12]
     animes = Anime.objects.order_by('-criado_em')[:6]
+
+
 
 
     contexto = {'animes': animes, 'atualizacao': atualizacao}
@@ -50,8 +55,7 @@ def generos(request):
     :param request: a requsição
     :return: requisição
     """
-    generos = Genero.objects.order_by('name')
-    Genero.objects.create(name='ola', name_apresentacao='ola')
+    generos = Genero.objects.order_by('name_apresentacao')
     contexto = {'generos': generos}
     return render(request, 'animes/generos.html', contexto)
 
@@ -90,6 +94,44 @@ def genero(request, genero):
 
     # Renderiza a template 'animes/genero.html' com o contexto
     return render(request, 'animes/genero.html', contexto)
+
+def generoCriar(request):
+    if request.method != 'POST':
+        form = GeneroForm()
+
+    else:
+        form = GeneroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Genero criado com sucesso!')
+            return redirect('genero_criar')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Criar Genero'}
+    return render(request, 'animes/form.html', context)
+
+
+def generoEditar(request, genero_name):
+    genero = Genero.objects.get(name=genero_name)
+    if request.method != "POST":
+        form = GeneroForm(instance=genero)
+    else:
+        form = GeneroForm(instance=genero, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Genero '{request.POST["name"]}' Editado com sucesso!")
+            return redirect('generos')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Editar Genero'}
+    return render(request, 'animes/form.html', context)
+
 def novos_eps(request):
     atualizacao = Episodio.objects.order_by('-postado_em')
     animes = Anime.objects.order_by('-criado_em')
@@ -175,12 +217,13 @@ def episodio(request, anime_slug, episodio_slug):
 
     return render(request, 'animes/episodio.html', contexto)
 
-
+@login_required(login_url='index')
+@user_passes_test(is_staff)
 def animeCriar(request):
     if request.method != 'POST':
-        form = CriarAnime()
+        form = AnimeForm()
     else:
-        form = CriarAnime(request.POST)
+        form = AnimeForm(request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Tópico criado com sucesso!')
@@ -193,6 +236,72 @@ def animeCriar(request):
     context = {'form': form, 'nome': 'Criar Anime'}
     return render(request, 'animes/form.html', context)
 
+@login_required(login_url='index')
+@user_passes_test(is_staff)
+def AnimeEditar(request, anime_slug):
+    anime = Anime.objects.get(slug=anime_slug)
+    if request.method != 'POST':
+        form = AnimeForm(instance=anime)
+    else:
+        form = AnimeForm(instance=anime, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Anime Atualizado com sucesso!')
+            return redirect(reverse('anime', kwargs={'anime_slug': anime_slug}))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Editar Anime'}
+    return render(request, 'animes/form.html', context)
+
+
+@login_required(login_url='index')
+@user_passes_test(is_staff)
+def episodioCriar(request, anime_slug):
+    if request.method != 'POST':
+        form = EpisiodioForm()
+    else:
+        form = EpisiodioForm(request.POST)
+        if form.is_valid():
+            episodio = form.save(commit=False)  # Impede o salvamento imediato no banco de dados
+            # Adicione qualquer lógica adicional aqui
+            anime = Anime.objects.get(slug=anime_slug)
+            episodio.anime = anime # Substitua pelo valor ou consulta desejado
+            # Agora salve o objeto no banco de dados
+            episodio.save()
+            messages.success(request, f"Episódio '{request.POST['titulo']}' criado com sucesso!")
+            return redirect(reverse('episodio_criar', kwargs={'anime_slug': anime_slug}))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Adicionar Episodio'}
+    return render(request, 'animes/form.html', context)
+
+
+@login_required(login_url='index')
+@user_passes_test(is_staff)
+def episodioEditar(request, anime_slug, episodio_slug):
+    anime = Anime.objects.get(slug=anime_slug)
+    episodio = Episodio.objects.get(anime=anime.id, slug=episodio_slug)
+    if request.method != 'POST':
+        form = EpisiodioForm(instance=episodio)
+    else:
+        form = EpisiodioForm(instance=episodio, data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Episódio '{request.POST['titulo']}' editado com sucesso!")
+            return redirect(reverse('anime', kwargs={'anime_slug': anime_slug}))
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"O campo '{field}': {error}")
+
+    context = {'form': form, 'nome': 'Editar Episodio'}
+    return render(request, 'animes/form.html', context)
 
 def buscarAnime(request):
     animes = Anime.objects.order_by('-criado_em')[:6]
@@ -212,23 +321,3 @@ def buscarAnime(request):
 
 
 
-def CriarTopic(request):
-
-    if request.method == 'POST':
-
-        form = TopicForm(request.POST)
-        form = TopicForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Tópico criado com sucesso!')
-            return redirect('criar_topic')
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"O campo '{field}': {error}")
-
-    else:
-        form = TopicForm()
-    context = {'form': form, 'nome': 'Criar Topico'}
-
-    return render(request, 'animes/form.html', context)

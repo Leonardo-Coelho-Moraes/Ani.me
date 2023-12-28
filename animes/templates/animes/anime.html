@@ -23,7 +23,11 @@
 </style>
 {% endblock %}
 {% block content %}
-<section class="flex justify-center pb-6 gap-12 h-96">
+
+<section class="flex flex-col">
+    {% include 'animes/alerts.html' %}
+    <div class="flex justify-center pb-6 gap-12 h-96">
+
     {% if anime.imagem_capa %}
     <img src="{{ anime.imagem_capa }}" alt="{{ anime.nome }}" class="rounded h-full w-64 object-cover">
     {% else %}
@@ -50,15 +54,28 @@
             <li class="mt-5 mb-3">
                 <b class="text-lg font-medium text-white">Descrição: </b> <span class="font-normal text-base text-slate-400 ">{{anime.descricao}}</span>
             </li>
-            <li >
+            <li class="flex gap-2" >
 
-                <a href="{% if cap1 %}{% url 'episodio' anime_slug=anime.slug episodio_slug=cap1.slug %}{% else %}#{% endif %}" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">Ver o 1ª capitulo</a>
+
+                <a href="{% if cap1 %}{% url 'episodio' anime_slug=anime.slug episodio_slug=cap1.slug %}{% else %}#{% endif %}" class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">Ver o 1ª capitulo</a>
+                 {% if user.is_staff %}
+    <a href="{% url 'anime_editar' anime_slug=anime.slug  %}" class=" flex items-center justify-center gap-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+</svg>Editar</a>
+                 <a href="{% url 'episodio_criar' anime_slug=anime.slug  %}" class=" flex items-center justify-center gap-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+</svg>
+                     Episodio</a>
+{% endif %}
             </li>
 
         </ul>
   {%endif %}
 
+</div>
 </section>
+
 <section>
     <h1 class="text-white font-base text-2xl mb-2">Episódios</h1>
 
